@@ -21,3 +21,9 @@ services:
     volumes:
       - ./container_storage/registry/data:/var/lib/registry
       - ./container_storage/registry/htpasswd:/auth/htpasswd
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
