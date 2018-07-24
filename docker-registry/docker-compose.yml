@@ -1,0 +1,23 @@
+version: '3'
+services:
+  registry:
+    restart: always
+    image: registry:latest
+    container_name: registry
+    expose:
+      - ${DOCKERHUB_PORT}
+    environment: 
+      - REGISTRY_AUTH=htpasswd
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
+      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+      - REGISTRY_HTTP_ADDR=0.0.0.0:${DOCKERHUB_PORT}
+    labels:
+      - "traefik.backend=hub"
+      - "traefik.frontend.rule=Host:${DOCKERHUB_URL}"
+      - "traefik.enable=true"
+      - "traefik.port=${DOCKERHUB_PORT}"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.docker.network=traefik"
+    volumes:
+      - ./container_storage/registry/data:/var/lib/registry
+      - ./container_storage/registry/htpasswd:/auth/htpasswd
