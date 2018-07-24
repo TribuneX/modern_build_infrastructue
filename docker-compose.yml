@@ -1,0 +1,16 @@
+version: '3'
+services:
+  nexus:
+    container_name: nexus
+    image: sonatype/nexus3
+    expose:
+      - ${NEXUS_PORT}
+    volumes:
+      - ${CONTAINER_STORAGE}/nexus:/nexus-data
+    labels:
+      - "traefik.backend=nexus"
+      - "traefik.frontend.rule=Host:${NEXUS_URL}"
+      - "traefik.enable=true"
+      - "traefik.port=${NEXUS_PORT}"
+      - "traefik.frontend.redirect.entryPoint=https"
+      - "traefik.docker.network=traefik"
